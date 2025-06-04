@@ -19,8 +19,9 @@ import {
 } from "./ui/select";
 import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
+import { nanoid } from "nanoid";
 
-const AddTaskForm = () => {
+const AddTaskForm = ({ onAddTask }) => {
   const { control, handleSubmit, register, reset } = useForm({
     defaultValues: {
       title: "",
@@ -33,12 +34,14 @@ const AddTaskForm = () => {
   const onSubmit = (data) => {
     console.log("Form data:", data);
 
-    // TODO: call onAddTask here!
+    const newTask = {
+      id: nanoid(),
+      title: data.title,
+    };
 
-    // Close Dialog
+    onAddTask(data.status, newTask);
+
     setIsOpen(false);
-
-    // Optional: reset form
     reset();
   };
 

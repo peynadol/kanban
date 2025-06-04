@@ -62,9 +62,24 @@ function App() {
     console.log(`Dragged task ${activeId} over column ${overId}`);
   };
 
+  const handleAddTask = (status, newTask) => {
+    setBoardData((prevData) => {
+      const updatedColumns = prevData.columns.map((column) => {
+        if (column.id === status) {
+          return {
+            ...column,
+            tasks: [...column.tasks, newTask],
+          };
+        }
+        return column;
+      });
+      return { columns: updatedColumns };
+    });
+  };
+
   return (
     <>
-      <AddTaskForm />
+      <AddTaskForm onAddTask={handleAddTask} />
       <DndContext onDragEnd={handleDragEnd}>
         <Board boardData={boardData} />
       </DndContext>
