@@ -1,76 +1,96 @@
-import { useState } from 'react';
-import Board from './components/Board';
-import { DndContext } from '@dnd-kit/core';
-import AddTaskForm from './components/AddTaskForm';
-import { initialBoardData } from './initialBoard';
-import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
-import { AppSidebar } from '@/components/Sidebar';
+import { useState } from "react";
+import Board from "./components/Board";
+import { DndContext } from "@dnd-kit/core";
+import AddTaskForm from "./components/AddTaskForm";
+import { initialBoardData } from "./initialBoard";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/Sidebar";
+
 function App() {
-  const [boardData, setBoardData] = useState(initialBoardData[0]);
+  const [boardsData, setBoardsData] = useState(initialBoardData);
+  const [activeBoardId, setActiveBoardId] = useState(initialBoardData[0].id);
+
+  const activeBoard = boardsData.find((board) => board.id === activeBoardId);
 
   const handleDragEnd = (event) => {
     const { active, over } = event;
     if (!over) return;
-    const activeId = active.id; // this is the task being dragged
-    const overId = over.id; // this is the column being hovered over
+    const activeId = active.id;
+    const overId = over.id;
 
-    // finds the column that contains the task being dragged
-    const sourceColumn = boardData.columns.find((column) =>
+    const sourceColumn = activeBoard.columns.find((column) =>
       column.tasks.some((task) => task.id === activeId)
     );
 
-    // iterates over source column and grabs entire matching task
     const taskToMove = sourceColumn?.tasks.find((task) => task.id === activeId);
 
-    // if task is dropped in its original column, do nothing
     if (sourceColumn?.id === overId) {
       console.log(`Task ${activeId} dropped in the same column ${overId}`);
       return;
     }
 
-    const updatedColumns = boardData.columns.map((column) => {
-      if (column.id === sourceColumn?.id) {
-        return {
-          ...column,
-          tasks: column.tasks.filter((task) => task.id !== activeId),
-        };
-      } else if (column.id === overId) {
-        return {
-          ...column,
-          tasks: [...column.tasks, taskToMove],
-        };
-      } else {
-        return column;
-      }
-    });
-    setBoardData({ columns: updatedColumns });
+    setBoardsData((prevBoards) =>
+      prevBoards.map((board) => {
+        if (board.id !== activeBoardId) return board;
+
+        const updatedColumns = board.columns.map((column) => {
+          if (column.id === sourceColumn?.id) {
+            return {
+              ...column,
+              tasks: column.tasks.filter((task) => task.id !== activeId),
+            };
+          } else if (column.id === overId) {
+            return {
+              ...column,
+              tasks: [...column.tasks, taskToMove],
+            };
+          } else {
+            return column;
+          }
+        });
+
+        return { ...board, columns: updatedColumns };
+      })
+    );
+
     console.log(`Dragged task ${activeId} over column ${overId}`);
   };
 
   const handleAddTask = (status, newTask) => {
-    setBoardData((prevData) => {
-      const updatedColumns = prevData.columns.map((column) => {
-        if (column.id === status) {
-          return {
-            ...column,
-            tasks: [...column.tasks, newTask],
-          };
-        }
-        return column;
-      });
-      return { columns: updatedColumns };
-    });
+    setBoardsData((prevBoards) =>
+      prevBoards.map((board) => {
+        if (board.id !== activeBoardId) return board;
+
+        const updatedColumns = board.columns.map((column) => {
+          if (column.id === status) {
+            return {
+              ...column,
+              tasks: [...column.tasks, newTask],
+            };
+          }
+          return column;
+        });
+
+        return { ...board, columns: updatedColumns };
+      })
+    );
   };
 
   return (
-    <div className='flex min-h-screen w-full'>
+    <div className="flex min-h-screen w-full">
       <SidebarProvider>
-        <AppSidebar />
-        <SidebarTrigger />
-        <AddTaskForm onAddTask={handleAddTask} />
-        <DndContext onDragEnd={handleDragEnd}>
-          <Board boardData={boardData} />
-        </DndContext>
+        <AppSidebar
+          boards={boardsData}
+          activeBoardId={activeBoardId}
+          onSelectBoard={setActiveBoardId}
+        />
+        <main className="flex-1 p-4 overflow-auto">
+          <AddTaskForm onAddTask={handleAddTask} />
+          <DndContext onDragEnd={handleDragEnd}>
+            <SidebarTrigger />
+            <Board boardData={activeBoard} />
+          </DndContext>
+        </main>
       </SidebarProvider>
     </div>
   );
