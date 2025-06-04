@@ -3,6 +3,7 @@ import { CSS } from "@dnd-kit/utilities";
 //TODO: style the dragged task
 //TODO: consider using DragOverlay component in dnd-kit
 //TODO: figure out how to re-order tasks within the same column, bumping other tasks up or down
+//TODO: above todo - i think it's called sortable list in dnd-kit
 
 const Task = ({ task }) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({

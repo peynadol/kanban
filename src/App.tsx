@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Board from "./components/Board";
 import { DndContext } from "@dnd-kit/core";
+import AddTaskForm from "./components/AddTaskForm";
 function App() {
   const [boardData, setBoardData] = useState({
     columns: [
@@ -63,6 +64,7 @@ function App() {
 
   return (
     <>
+      <AddTaskForm />
       <DndContext onDragEnd={handleDragEnd}>
         <Board boardData={boardData} />
       </DndContext>
