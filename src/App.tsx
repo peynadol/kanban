@@ -1,8 +1,10 @@
-import { useState } from "react";
-import Board from "./components/Board";
-import { DndContext } from "@dnd-kit/core";
-import AddTaskForm from "./components/AddTaskForm";
-import { initialBoardData } from "./initialBoard";
+import { useState } from 'react';
+import Board from './components/Board';
+import { DndContext } from '@dnd-kit/core';
+import AddTaskForm from './components/AddTaskForm';
+import { initialBoardData } from './initialBoard';
+import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
+import { AppSidebar } from '@/components/Sidebar';
 function App() {
   const [boardData, setBoardData] = useState(initialBoardData[0]);
 
@@ -61,12 +63,16 @@ function App() {
   };
 
   return (
-    <>
-      <AddTaskForm onAddTask={handleAddTask} />
-      <DndContext onDragEnd={handleDragEnd}>
-        <Board boardData={boardData} />
-      </DndContext>
-    </>
+    <div className='flex min-h-screen w-full'>
+      <SidebarProvider>
+        <AppSidebar />
+        <SidebarTrigger />
+        <AddTaskForm onAddTask={handleAddTask} />
+        <DndContext onDragEnd={handleDragEnd}>
+          <Board boardData={boardData} />
+        </DndContext>
+      </SidebarProvider>
+    </div>
   );
 }
 
