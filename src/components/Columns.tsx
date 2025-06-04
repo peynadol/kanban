@@ -1,12 +1,23 @@
+import { useDroppable } from "@dnd-kit/core";
 import Task from "./Task";
+
 const Columns = ({ column }) => {
-  console.log("Column component", column);
+  const { isOver, setNodeRef } = useDroppable({
+    id: column.id,
+  });
+
   return (
-    <div>
+    <div
+      ref={setNodeRef}
+      className="flex flex-col bg-gray-100 p-4 rounded w-72"
+      style={{ backgroundColor: isOver ? "lightgreen" : undefined }}
+    >
       <h2>{column.id}</h2>
-      <Task tasks={column.tasks} />
+
+      {column.tasks.map((task) => (
+        <Task key={task.id} task={task} />
+      ))}
     </div>
   );
 };
-
 export default Columns;
