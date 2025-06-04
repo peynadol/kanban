@@ -16,7 +16,7 @@ function App() {
       },
       {
         id: "done",
-        tasks: [],
+        tasks: [{ id: "task-4", title: "Render tasks" }],
       },
     ],
   });
