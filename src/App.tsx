@@ -56,6 +56,23 @@ function App() {
     console.log(`Dragged task ${activeId} over column ${overId}`);
   };
 
+  const addNewBoard = (newBoard) => {
+    setBoardsData((prevBoards) => [...prevBoards, newBoard]);
+    setActiveBoardId(newBoard.id);
+  };
+
+  const removeBoard = (boardId) => {
+    setBoardsData((prevBoards) => {
+      const updatedBoards = prevBoards.filter((board) => board.id !== boardId);
+
+      if (activeBoardId === boardId) {
+        setActiveBoardId(updatedBoards[0]?.id || null);
+      }
+
+      return updatedBoards;
+    });
+  };
+
   const handleAddTask = (status, newTask) => {
     setBoardsData((prevBoards) =>
       prevBoards.map((board) => {
@@ -83,12 +100,20 @@ function App() {
           boards={boardsData}
           activeBoardId={activeBoardId}
           onSelectBoard={setActiveBoardId}
+          onAddBoard={addNewBoard}
+          onRemoveBoard={removeBoard}
         />
         <main className="flex-1 p-4 overflow-auto">
           <AddTaskForm onAddTask={handleAddTask} />
           <DndContext onDragEnd={handleDragEnd}>
             <SidebarTrigger />
-            <Board boardData={activeBoard} />
+            {activeBoard ? (
+              <Board boardData={activeBoard} />
+            ) : (
+              <p className="text-center text-gray-500 mt-10">
+                No board selected.
+              </p>
+            )}
           </DndContext>
         </main>
       </SidebarProvider>

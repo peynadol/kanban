@@ -1,0 +1,6 @@
+change add new board from alert to modal/ dialog
+consider the ability to trigger it with a keyboard shortcut
+
+ability to delete a bord - have confirmation dialog
+
+ability to delete a task - bin icon on each card - confirmation dialog

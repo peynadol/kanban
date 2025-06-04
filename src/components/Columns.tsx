@@ -12,7 +12,9 @@ const Columns = ({ column }) => {
       className="flex flex-col bg-gray-100 p-4 rounded w-72"
       style={{ backgroundColor: isOver ? "lightgreen" : undefined }}
     >
-      <h2>{column.id}</h2>
+      <h2>
+        {column.title} ({column.tasks.length})
+      </h2>
 
       {column.tasks.map((task) => (
         <Task key={task.id} task={task} />
