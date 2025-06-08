@@ -1,7 +1,17 @@
 import { useDroppable } from "@dnd-kit/core";
 import Task from "./Task";
+type ColumnsProps = {
+  column: {
+    id: string;
+    title: string;
+    tasks: {
+      id: string;
+      title: string;
+    }[];
+  };
+};
 
-const Columns = ({ column }) => {
+const Columns = ({ column }: ColumnsProps) => {
   const { isOver, setNodeRef } = useDroppable({
     id: column.id,
   });

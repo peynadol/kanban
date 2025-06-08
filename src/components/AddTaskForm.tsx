@@ -21,7 +21,11 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import { nanoid } from "nanoid";
 
-const AddTaskForm = ({ onAddTask }) => {
+type AddTaskFormProps = {
+  onAddTask: (status: string, task: { id: string; title: string }) => void;
+};
+
+const AddTaskForm = ({ onAddTask }: AddTaskFormProps) => {
   const { control, handleSubmit, register, reset } = useForm({
     defaultValues: {
       title: "",
@@ -29,9 +33,9 @@ const AddTaskForm = ({ onAddTask }) => {
     },
   });
 
-  const [isOpen, setIsOpen] = useState(false); 
+  const [isOpen, setIsOpen] = useState(false);
 
-  const onSubmit = (data) => {
+  const onSubmit = (data: { title: string; status: string }) => {
     console.log("Form data:", data);
 
     const newTask = {

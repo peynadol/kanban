@@ -5,6 +5,7 @@ export const initialBoardData = [
     columns: [
       {
         id: "todo",
+        title: "To Do",
         tasks: [
           { id: "task-1", title: "Learn React" },
           { id: "task-2", title: "Build Kanban Board" },
@@ -12,10 +13,12 @@ export const initialBoardData = [
       },
       {
         id: "doing",
+        title: "Doing",
         tasks: [{ id: "task-3", title: "Writing Zod schemas" }],
       },
       {
         id: "done",
+        title: "Done",
         tasks: [{ id: "task-4", title: "Render tasks" }],
       },
     ],
@@ -26,6 +29,7 @@ export const initialBoardData = [
     columns: [
       {
         id: "todo",
+        title: "To Do",
         tasks: [
           { id: "task-5", title: "Setup project repo" },
           { id: "task-6", title: "Write project plan" },
@@ -33,10 +37,12 @@ export const initialBoardData = [
       },
       {
         id: "doing",
+        title: "Doing",
         tasks: [{ id: "task-7", title: "Initial prototype" }],
       },
       {
         id: "done",
+        title: "Done",
         tasks: [{ id: "task-8", title: "Team kickoff meeting" }],
       },
     ],
@@ -47,6 +53,7 @@ export const initialBoardData = [
     columns: [
       {
         id: "todo",
+        title: "To Do",
         tasks: [
           { id: "task-9", title: "Learn Zustand" },
           { id: "task-10", title: "Learn TanStack Query" },
@@ -54,10 +61,12 @@ export const initialBoardData = [
       },
       {
         id: "doing",
+        title: "Doing",
         tasks: [{ id: "task-11", title: "Practice DnD Kit" }],
       },
       {
         id: "done",
+        title: "Done",
         tasks: [{ id: "task-12", title: "React Hook Form deep dive" }],
       },
     ],

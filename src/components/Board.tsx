@@ -1,5 +1,19 @@
 import Columns from "./Columns";
-const Board = ({ boardData }) => {
+type BoardProps = {
+  boardData: {
+    id: string;
+    title: string;
+    columns: {
+      id: string;
+      title: string;
+      tasks: {
+        id: string;
+        title: string;
+      }[];
+    }[];
+  };
+};
+const Board = ({ boardData }: BoardProps) => {
   return (
     console.log("Board component", boardData),
     console.log("Columns in boardData", boardData.columns),

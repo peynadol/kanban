@@ -5,7 +5,14 @@ import { CSS } from "@dnd-kit/utilities";
 //TODO: figure out how to re-order tasks within the same column, bumping other tasks up or down
 //TODO: above todo - i think it's called sortable list in dnd-kit
 
-const Task = ({ task }) => {
+type TaskProps = {
+  task: {
+    id: string;
+    title: string;
+  };
+};
+
+const Task = ({ task }: TaskProps) => {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: task.id,
   });

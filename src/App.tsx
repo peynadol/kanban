@@ -1,24 +1,44 @@
 import { useState } from "react";
 import Board from "./components/Board";
-import { DndContext } from "@dnd-kit/core";
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import AddTaskForm from "./components/AddTaskForm";
 import { initialBoardData } from "./initialBoard";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/Sidebar";
 
+type Task = {
+  id: string;
+  title: string;
+  description?: string;
+};
+
+type Column = {
+  id: string;
+  title: string;
+  tasks: Task[];
+};
+
+type Board = {
+  id: string;
+  title: string;
+  columns: Column[];
+};
+
 function App() {
-  const [boardsData, setBoardsData] = useState(initialBoardData);
-  const [activeBoardId, setActiveBoardId] = useState(initialBoardData[0].id);
+  const [boardsData, setBoardsData] = useState<Board[]>(initialBoardData);
+  const [activeBoardId, setActiveBoardId] = useState<string>(
+    initialBoardData[0].id
+  );
 
   const activeBoard = boardsData.find((board) => board.id === activeBoardId);
 
-  const handleDragEnd = (event) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
     if (!over) return;
-    const activeId = active.id;
-    const overId = over.id;
+    const activeId = active.id as string;
+    const overId = over.id as string;
 
-    const sourceColumn = activeBoard.columns.find((column) =>
+    const sourceColumn = activeBoard?.columns.find((column) =>
       column.tasks.some((task) => task.id === activeId)
     );
 
@@ -42,7 +62,7 @@ function App() {
           } else if (column.id === overId) {
             return {
               ...column,
-              tasks: [...column.tasks, taskToMove],
+              tasks: taskToMove ? [...column.tasks, taskToMove] : column.tasks,
             };
           } else {
             return column;
@@ -56,24 +76,24 @@ function App() {
     console.log(`Dragged task ${activeId} over column ${overId}`);
   };
 
-  const addNewBoard = (newBoard) => {
+  const addNewBoard = (newBoard: Board) => {
     setBoardsData((prevBoards) => [...prevBoards, newBoard]);
     setActiveBoardId(newBoard.id);
   };
 
-  const removeBoard = (boardId) => {
+  const removeBoard = (boardId: string) => {
     setBoardsData((prevBoards) => {
       const updatedBoards = prevBoards.filter((board) => board.id !== boardId);
 
       if (activeBoardId === boardId) {
-        setActiveBoardId(updatedBoards[0]?.id || null);
+        setActiveBoardId(updatedBoards[0]?.id || "");
       }
 
       return updatedBoards;
     });
   };
 
-  const handleAddTask = (status, newTask) => {
+  const handleAddTask = (status: string, newTask: Task) => {
     setBoardsData((prevBoards) =>
       prevBoards.map((board) => {
         if (board.id !== activeBoardId) return board;

@@ -1,5 +1,5 @@
 import { Kanban, Trash } from "lucide-react";
-
+import { nanoid } from "nanoid";
 import {
   Sidebar,
   SidebarContent,
@@ -11,17 +11,42 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
+type Task = {
+  id: string;
+  title: string;
+};
+
+type Column = {
+  id: string;
+  title: string;
+  tasks: Task[];
+};
+
+type Board = {
+  id: string;
+  title: string;
+  columns: Column[];
+};
+
+type AppSidebarProps = {
+  boards: Board[];
+  activeBoardId: string;
+  onSelectBoard: (boardId: string) => void;
+  onAddBoard: (board: Board) => void;
+  onRemoveBoard: (boardId: string) => void;
+};
+
 export function AppSidebar({
   boards,
   activeBoardId,
   onSelectBoard,
   onAddBoard,
   onRemoveBoard,
-}) {
+}: AppSidebarProps) {
   const handleAddBoard = () => {
     const newBoardTitle = prompt("Enter the title for the new board:");
-    const newBoard = {
-      id: Date.now().toString(),
+    const newBoard: Board = {
+      id: nanoid(),
       title: newBoardTitle || "New Board",
       columns: [
         { id: "todo", title: "To Do", tasks: [] },
@@ -41,10 +66,18 @@ export function AppSidebar({
             <SidebarMenu>
               {boards.map((board) => (
                 <SidebarMenuItem key={board.id}>
-                  <SidebarMenuButton onClick={() => onSelectBoard(board.id)}>
+                  <SidebarMenuButton
+                    onClick={() => onSelectBoard(board.id)}
+                    className={
+                      board.id === activeBoardId ? "bg-primary text-white" : ""
+                    }
+                  >
                     <Kanban />
                     <span>{board.title}</span>
-                    <Trash onClick={() => onRemoveBoard(board.id)} />
+                    <Trash
+                      className="bg-red-500 text-white rounded-full p-1 ml-auto"
+                      onClick={() => onRemoveBoard(board.id)}
+                    />
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
