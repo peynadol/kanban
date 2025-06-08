@@ -1,5 +1,10 @@
 import { useDroppable } from "@dnd-kit/core";
 import Task from "./Task";
+import {
+  SortableContext,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+
 type ColumnsProps = {
   column: {
     id: string;
@@ -12,8 +17,8 @@ type ColumnsProps = {
 };
 
 const Columns = ({ column }: ColumnsProps) => {
-  const { isOver, setNodeRef } = useDroppable({
-    id: column.id,
+  const { setNodeRef, isOver } = useDroppable({
+    id: column.id, 
   });
 
   return (
@@ -25,11 +30,16 @@ const Columns = ({ column }: ColumnsProps) => {
       <h2>
         {column.title} ({column.tasks.length})
       </h2>
-
-      {column.tasks.map((task) => (
-        <Task key={task.id} task={task} />
-      ))}
+      <SortableContext
+        items={column.tasks.map((task) => task.id)}
+        strategy={verticalListSortingStrategy}
+      >
+        {column.tasks.map((task) => (
+          <Task key={task.id} task={task} />
+        ))}
+      </SortableContext>
     </div>
   );
 };
+
 export default Columns;

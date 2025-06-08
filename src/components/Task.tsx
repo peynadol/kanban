@@ -1,9 +1,6 @@
-import { useDraggable } from "@dnd-kit/core";
+import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-//TODO: style the dragged task
-//TODO: consider using DragOverlay component in dnd-kit
-//TODO: figure out how to re-order tasks within the same column, bumping other tasks up or down
-//TODO: above todo - i think it's called sortable list in dnd-kit
+import { GripVertical } from "lucide-react"; // or any icon you like
 
 type TaskProps = {
   task: {
@@ -13,24 +10,41 @@ type TaskProps = {
 };
 
 const Task = ({ task }: TaskProps) => {
-  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
     id: task.id,
   });
 
-  const style = transform
-    ? { transform: CSS.Transform.toString(transform) }
-    : undefined;
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    willChange: transform ? "transform" : undefined,
+  };
 
   return (
     <div
       ref={setNodeRef}
       style={style}
-      {...listeners}
-      {...attributes}
-      className="bg-amber-200 p-4 m-4 rounded-lg shadow-md outline-1"
+      className="bg-amber-200 p-4 m-4 rounded-lg shadow-md outline-1 flex justify-between items-center"
     >
-      {task.title}
+      <span>{task.title}</span>
+
+      <button
+        {...attributes}
+        {...listeners}
+        className="cursor-grab p-1 text-gray-600 hover:text-black"
+      >
+        <GripVertical size={16} />
+      </button>
     </div>
   );
 };
+
 export default Task;
